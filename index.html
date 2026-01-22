@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocraft Wood Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-4">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">Protocraft Cost & Pricing Calculator</h1>
+
+            <div class="space-y-4 sm:space-y-6">
+                <div class="bg-amber-50 p-3 sm:p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2 text-sm sm:text-base">Sheet Details</h3>
+                    <p class="text-xs sm:text-sm">Wood: Birch | Size: 32 sqft | Cut: 15"×15" | Pieces: 18</p>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-2 text-sm sm:text-base">Thickness</label>
+                    <select id="thickness" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        <option value="4mm">4mm</option>
+                        <option value="6mm">6mm</option>
+                        <option value="8mm">8mm</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-2 text-sm sm:text-base">Total Sheet Cost (₹)</label>
+                    <input type="text" inputmode="decimal" id="totalCost" placeholder="Enter cost (e.g., 3000)" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                </div>
+
+                <div class="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                    <h3 class="font-semibold mb-3 text-sm sm:text-base">Product Dimensions</h3>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Length (inches)</label>
+                            <input type="text" inputmode="decimal" id="productLength" placeholder="e.g., 4" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Width (inches)</label>
+                            <input type="text" inputmode="decimal" id="productWidth" placeholder="e.g., 4" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                    </div>
+                    <label class="block font-medium mb-2 text-xs sm:text-sm">Gap (inches)</label>
+                    <input type="text" inputmode="decimal" id="gap" value="0.15" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                </div>
+
+                <div id="results" class="hidden bg-green-50 p-4 sm:p-6 rounded-xl border-2 border-green-200">
+                    <h3 class="text-base sm:text-lg font-semibold mb-3">Material Costs</h3>
+                    <div class="space-y-2 text-xs sm:text-sm">
+                        <div class="flex justify-between"><span>Cost Per Piece (15"×15"):</span><span class="font-bold" id="costPerPiece">₹0.00</span></div>
+                        <div id="productionResults" class="hidden">
+                            <div class="flex justify-between"><span>Products per piece:</span><span class="font-bold" id="productsPerPiece">0</span></div>
+                            <div class="flex justify-between"><span>Total products (18 pieces):</span><span class="font-bold" id="totalProducts">0</span></div>
+                            <div class="flex justify-between text-base sm:text-lg mt-2"><span>Material Cost/Product:</span><span class="font-bold text-green-700" id="costPerProduct">₹0.00</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-purple-50 p-3 sm:p-4 rounded-lg">
+                    <h3 class="font-semibold mb-3 text-sm sm:text-base">Operating Costs</h3>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Cutting Time (min)</label>
+                            <input type="text" inputmode="decimal" id="cuttingTime" placeholder="e.g., 5" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Electricity (₹/min)</label>
+                            <input type="text" inputmode="decimal" id="electricityRate" value="0.33" class="w-full p-2 sm:p-3 border-2 rounded-lg bg-gray-50 text-sm sm:text-base">
+                        </div>
+                    </div>
+                    <div class="mb-3 sm:mb-4">
+                        <label class="block font-medium mb-2 text-xs sm:text-sm">Machine Wear (₹/product)</label>
+                        <input type="text" inputmode="decimal" id="machineWear" value="10" class="w-full p-2 sm:p-3 border-2 rounded-lg bg-gray-50 text-sm sm:text-base">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Labor Cost (₹)</label>
+                            <input type="text" inputmode="decimal" id="laborCost" value="0" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Packaging (₹)</label>
+                            <input type="text" inputmode="decimal" id="packagingCost" value="0" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                    </div>
+                    <div class="mb-3 sm:mb-4">
+                        <label class="block font-medium mb-2 text-xs sm:text-sm">Other Overhead (₹)</label>
+                        <input type="text" inputmode="decimal" id="overheadCost" value="0" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">Profit Margin (%)</label>
+                            <input type="text" inputmode="decimal" id="profitMargin" value="30" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-2 text-xs sm:text-sm">GST (%)</label>
+                            <input type="text" inputmode="decimal" id="gstRate" value="18" class="w-full p-2 sm:p-3 border-2 rounded-lg text-sm sm:text-base">
+                        </div>
+                    </div>
+                </div>
+
+                <button id="calculateBtn" class="w-full py-3 sm:py-4 rounded-lg font-bold text-white bg-purple-600 hover:bg-purple-700 text-base sm:text-lg">
+                    💰 Calculate Selling Price
+                </button>
+
+                <div id="pricingResults" class="hidden bg-amber-50 p-4 sm:p-6 rounded-xl border-2 border-amber-300">
+                    <h3 class="text-base sm:text-lg font-semibold mb-3">💰 Final Pricing</h3>
+                    <div class="space-y-2 text-xs sm:text-sm">
+                        <div class="flex justify-between"><span>Material:</span><span id="priceMaterialCost">₹0.00</span></div>
+                        <div class="flex justify-between"><span>Electricity:</span><span id="priceElectricityCost">₹0.00</span></div>
+                        <div class="flex justify-between"><span>Machine Wear:</span><span id="priceMachineWear">₹0.00</span></div>
+                        <div class="flex justify-between"><span>Labor:</span><span id="priceLaborCost">₹0.00</span></div>
+                        <div class="flex justify-between"><span>Packaging:</span><span id="pricePackaging">₹0.00</span></div>
+                        <div class="flex justify-between"><span>Overhead:</span><span id="priceOverhead">₹0.00</span></div>
+                        <div class="border-t-2 border-amber-400 my-2"></div>
+                        <div class="flex justify-between font-semibold"><span>Total Cost:</span><span id="priceTotalCost">₹0.00</span></div>
+                        <div class="flex justify-between"><span>Profit (<span id="displayProfitMargin">0</span>%):</span><span id="priceProfit">₹0.00</span></div>
+                        <div class="flex justify-between"><span>GST (<span id="displayGst">0</span>%):</span><span id="priceGst">₹0.00</span></div>
+                        <div class="border-t-2 border-amber-400 my-2"></div>
+                        <div class="flex justify-between text-lg sm:text-xl font-bold text-green-700"><span>Final Selling Price:</span><span id="priceFinal">₹0.00</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Material cost calculates automatically (dynamic)
+        // Pricing calculates only when button is clicked
+
+        const SHEET_SIZE = 15;
+        const TOTAL_PIECES = 18;
+
+        let materialCostPerProduct = 0;
+
+        // Function to calculate material costs dynamically
+        function calculateMaterialCosts() {
+            const totalCostStr = document.getElementById('totalCost').value;
+            const productLengthStr = document.getElementById('productLength').value;
+            const productWidthStr = document.getElementById('productWidth').value;
+            const gapStr = document.getElementById('gap').value;
+
+            const totalCost = parseFloat(totalCostStr) || 0;
+            const productLength = parseFloat(productLengthStr) || 0;
+            const productWidth = parseFloat(productWidthStr) || 0;
+            const gap = parseFloat(gapStr) || 0.15;
+
+            if (totalCost <= 0) {
+                document.getElementById('results').classList.add('hidden');
+                return;
+            }
+
+            // Calculate cost per piece
+            const costPerPiece = totalCost / TOTAL_PIECES;
+            document.getElementById('costPerPiece').textContent = `₹${costPerPiece.toFixed(2)}`;
+            document.getElementById('results').classList.remove('hidden');
+
+            // If product dimensions provided, calculate per-product costs
+            if (productLength > 0 && productWidth > 0) {
+                const lengthWithGap = productLength + gap;
+                const widthWithGap = productWidth + gap;
+                const productsAlongLength = Math.floor(SHEET_SIZE / lengthWithGap);
+                const productsAlongWidth = Math.floor(SHEET_SIZE / widthWithGap);
+                const productsPerPiece = productsAlongLength * productsAlongWidth;
+                const totalProducts = productsPerPiece * TOTAL_PIECES;
+
+                if (productsPerPiece > 0) {
+                    materialCostPerProduct = costPerPiece / productsPerPiece;
+
+                    document.getElementById('productionResults').classList.remove('hidden');
+                    document.getElementById('productsPerPiece').textContent = `${productsPerPiece} units`;
+                    document.getElementById('totalProducts').textContent = `${totalProducts} units`;
+                    document.getElementById('costPerProduct').textContent = `₹${materialCostPerProduct.toFixed(2)}`;
+                } else {
+                    document.getElementById('productionResults').classList.add('hidden');
+                    materialCostPerProduct = 0;
+                }
+            } else {
+                document.getElementById('productionResults').classList.add('hidden');
+                materialCostPerProduct = 0;
+            }
+        }
+
+        // Function to calculate selling price (only on button click)
+        function calculateSellingPrice() {
+            if (materialCostPerProduct <= 0) {
+                alert('Please enter Total Sheet Cost and Product Dimensions first!');
+                return;
+            }
+
+            const cuttingTimeStr = document.getElementById('cuttingTime').value;
+            const electricityRateStr = document.getElementById('electricityRate').value;
+            const machineWearStr = document.getElementById('machineWear').value;
+            const laborCostStr = document.getElementById('laborCost').value;
+            const packagingCostStr = document.getElementById('packagingCost').value;
+            const overheadCostStr = document.getElementById('overheadCost').value;
+            const profitMarginStr = document.getElementById('profitMargin').value;
+            const gstRateStr = document.getElementById('gstRate').value;
+
+            const cuttingTime = parseFloat(cuttingTimeStr) || 0;
+            const electricityRate = parseFloat(electricityRateStr) || 0.33;
+            const machineWear = parseFloat(machineWearStr) || 10;
+            const laborCost = parseFloat(laborCostStr) || 0;
+            const packagingCost = parseFloat(packagingCostStr) || 0;
+            const overheadCost = parseFloat(overheadCostStr) || 0;
+            const profitMargin = parseFloat(profitMarginStr) || 30;
+            const gstRate = parseFloat(gstRateStr) || 18;
+
+            // Calculate selling price
+            const electricityCost = cuttingTime * electricityRate;
+            const totalProductCost = materialCostPerProduct + electricityCost + machineWear + laborCost + packagingCost + overheadCost;
+            const profitAmount = totalProductCost * (profitMargin / 100);
+            const priceBeforeTax = totalProductCost + profitAmount;
+            const gstAmount = priceBeforeTax * (gstRate / 100);
+            const finalPrice = priceBeforeTax + gstAmount;
+
+            document.getElementById('pricingResults').classList.remove('hidden');
+            document.getElementById('priceMaterialCost').textContent = `₹${materialCostPerProduct.toFixed(2)}`;
+            document.getElementById('priceElectricityCost').textContent = `₹${electricityCost.toFixed(2)}`;
+            document.getElementById('priceMachineWear').textContent = `₹${machineWear.toFixed(2)}`;
+            document.getElementById('priceLaborCost').textContent = `₹${laborCost.toFixed(2)}`;
+            document.getElementById('pricePackaging').textContent = `₹${packagingCost.toFixed(2)}`;
+            document.getElementById('priceOverhead').textContent = `₹${overheadCost.toFixed(2)}`;
+            document.getElementById('priceTotalCost').textContent = `₹${totalProductCost.toFixed(2)}`;
+            document.getElementById('priceProfit').textContent = `₹${profitAmount.toFixed(2)}`;
+            document.getElementById('priceGst').textContent = `₹${gstAmount.toFixed(2)}`;
+            document.getElementById('priceFinal').textContent = `₹${finalPrice.toFixed(2)}`;
+            document.getElementById('displayProfitMargin').textContent = profitMargin.toFixed(1);
+            document.getElementById('displayGst').textContent = gstRate.toFixed(1);
+        }
+
+        // Add event listeners for automatic material cost calculation
+        document.getElementById('totalCost').addEventListener('input', calculateMaterialCosts);
+        document.getElementById('productLength').addEventListener('input', calculateMaterialCosts);
+        document.getElementById('productWidth').addEventListener('input', calculateMaterialCosts);
+        document.getElementById('gap').addEventListener('input', calculateMaterialCosts);
+
+        // Button click for selling price calculation
+        document.getElementById('calculateBtn').addEventListener('click', calculateSellingPrice);
+
+        // Calculate material costs on page load if gap has default value
+        calculateMaterialCosts();
+    </script>
+</body>
+</html>

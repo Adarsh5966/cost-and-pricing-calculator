@@ -205,8 +205,9 @@
             const laborCost = parseFloat(laborCostStr) || 0;
             const packagingCost = parseFloat(packagingCostStr) || 0;
             const overheadCost = parseFloat(overheadCostStr) || 0;
-            const profitMargin = parseFloat(profitMarginStr) || 30;
-            const gstRate = parseFloat(gstRateStr) || 18;
+            const profitMargin = isNaN(parseFloat(profitMarginStr)) ? 30 : parseFloat(profitMarginStr);
+            const gstRate = isNaN(parseFloat(gstRateStr)) ? 18: parseFloat(gstRateStr);
+
 
             // Calculate selling price
             const electricityCost = cuttingTime * electricityRate;
